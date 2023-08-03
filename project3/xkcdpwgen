@@ -77,7 +77,7 @@ def main(args):
         sys.exit(1)
 
     password = generate_password(words, caps, numbers, symbols)
-    print(f'password -> {password}')
+    print(password)
 
 
 if __name__ == "__main__":
