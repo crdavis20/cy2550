@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+# run the command chmod u+x xkcdpwgen before running ./kcdpwgen
+import argparse
+import random
+import sys
+
+
+def checkupper(token):
+    if token[0] >= 'A' and token[0] <= 'Z':
+        return True
+    else:
+        return False
+
+
+def load_dictionary_from_local_file(word_dictionary_location):
+    word_dictionary = []
+    try:
+        with open(word_dictionary_location, 'r') as f:
+            for word in f:
+                word_dictionary.append(word.rstrip('\n'))
+        return word_dictionary
+    except IOError:
+        print("Error: File does not appear to exist.")
+        sys.exit(1)
+
+
+def generate_password(words, caps, numbers, symbols):
+    word_dictionary_location = 'words.txt'
+    #word_dictionary_location = '/Users/crdavis/Desktop/words.txt'
+    word_dictionary = load_dictionary_from_local_file(word_dictionary_location)
+
+    if words > len(word_dictionary):
+        print(f'Invalid arguments. Ensure word size is less than {len(word_dictionary) + 1:,}')
+        sys.exit(1)
+
+    num_locations = words + caps + numbers + symbols
+
+    # Randomly select words and place in array
+    password_terms = random.sample(word_dictionary, words)
+
+    # Capitalize the first 'caps' number of words in order
+    for cap in range(caps - 1):
+        while True:  # deal with situation where we pick same random location more than once
+            location = random.randrange(0, len(password_terms))  # choose a random location
+            if not checkupper(password_terms[location][0]):
+                password_terms[location] = password_terms[location].capitalize()
+                break  # break only if we were successful in capitalizing this word
+
+    # Randomly select numbers and place them in the password array
+    for i in range(0, numbers):
+        password_terms.append(str(random.randrange(0, 9)))
+
+    # Randomly select symbols and place them in the password array
+    possible_symbols = '~!@#$%^&*.:;'
+    for i in range(0, symbols):
+        password_terms.append(random.sample(possible_symbols, 1)[0])  # append first element in random set of size 1
+
+    # Shuffle the password array to randomize the order of elements
+    random.shuffle(password_terms)
+
+    # Convert the password array into a string and print the password
+    return ''.join(password_terms)
+
+
+def main(args):
+    words, caps, numbers, symbols = args.words, args.caps, args.numbers, args.symbols
+    if caps < 0 or numbers < 0 or symbols < 0:
+        print("Invalid arguments. Ensure CAPS NUMBERS and SYMBOLS are greater than or equal to 0")
+        sys.exit(1)
+
+    if caps > words:
+        print("Invalid arguments. Ensure WORDS are greater than or equal to CAPS")
+        sys.exit(1)
+
+    if words <= 3:
+        print("Invalid arguments. Ensure WORDS is greater than 3")
+        sys.exit(1)
+
+    password = generate_password(words, caps, numbers, symbols)
+    print(f'password -> {password}')
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate a secure, memorable password using the XKCD method")
+    parser.add_argument('-w', '--words', type=int, default=4, help='include WORDS words in the password (default=4)')
+    parser.add_argument('-c', '--caps', type=int, default=0,
+                        help='capitalize the first letter of CAPS random words (default=0)')
+    parser.add_argument('-n', '--numbers', type=int, default=0,
+                        help='insert NUMBERS random numbers in the password (default=0)')
+    parser.add_argument('-s', '--symbols', type=int, default=0,
+                        help='insert SYMBOLS random symbols in the password (default=0)')
+
+    args = parser.parse_args()
+    main(args)
