@@ -72,7 +72,7 @@ def main(args):
         print("Invalid arguments. Ensure WORDS are greater than or equal to CAPS")
         sys.exit(1)
 
-    if words <= 3:
+    if words < 3:
         print("Invalid arguments. Ensure WORDS is greater than 3")
         sys.exit(1)
 
