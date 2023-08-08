@@ -64,10 +64,6 @@ def generate_password(words, caps, numbers, symbols):
 
 def main(args):
     words, caps, numbers, symbols = args.words, args.caps, args.numbers, args.symbols
-    
-    if words <= 3:
-        print("Invalid arguments. Ensure WORDS is greater than 3")
-        sys.exit(1)
 
     if caps < 0 or numbers < 0 or symbols < 0:
         print("Invalid arguments. Ensure CAPS NUMBERS and SYMBOLS are greater than or equal to 0")
