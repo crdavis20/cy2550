@@ -69,7 +69,7 @@ def main(args):
         print("Invalid arguments. Ensure CAPS NUMBERS and SYMBOLS are greater than or equal to 0")
         sys.exit(1)
 
-    #if caps > words:
+    if caps > words:
         print("Invalid arguments. Ensure WORDS are greater than or equal to CAPS")
         sys.exit(1)
 
