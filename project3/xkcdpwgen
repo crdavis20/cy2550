@@ -39,7 +39,7 @@ def generate_password(words, caps, numbers, symbols):
     password_terms = random.sample(word_dictionary, words)
 
     # Capitalize the first 'caps' number of words in order
-    for cap in range(caps - 1):
+    for cap in range(caps):
         while True:  # deal with situation where we pick same random location more than once
             location = random.randrange(0, len(password_terms))  # choose a random location
             if not checkupper(password_terms[location][0]):
